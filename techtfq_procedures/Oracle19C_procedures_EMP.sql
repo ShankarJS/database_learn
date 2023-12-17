@@ -1,0 +1,42 @@
+create table r2schools(technology varchar(50));
+
+CREATE TABLE EMP ( 
+    EMPNO NUMBER(4) PRIMARY KEY, 
+    ENAME VARCHAR2(30), 
+    JOB VARCHAR2(20), 
+    MGR NUMBER(4), 
+    HIREDATE DATE, 
+    SAL NUMBER(7,2), 
+    COMM NUMBER(7,2), 
+    DEPTNO NUMBER(2), 
+    CLASS VARCHAR2(10) 
+)
+
+
+INSERT INTO EMP (EMPNO, ENAME, JOB, MGR, HIREDATE, SAL, COMM, DEPTNO, CLASS) 
+VALUES (1, 'John Doe', 'Manager', NULL, TO_DATE('2022-01-01', 'YYYY-MM-DD'), 5000, NULL, 10, 'A');
+INSERT INTO EMP (EMPNO, ENAME, JOB, MGR, HIREDATE, SAL, COMM, DEPTNO, CLASS) 
+VALUES (2, 'Jane Smith', 'Analyst', 1, TO_DATE('2022-02-15', 'YYYY-MM-DD'), 4000, 500, 20, 'B');
+INSERT INTO EMP (EMPNO, ENAME, JOB, MGR, HIREDATE, SAL, COMM, DEPTNO, CLASS) 
+VALUES (3, 'Bob Johnson', 'Developer', 1, TO_DATE('2022-03-10', 'YYYY-MM-DD'), 4500, NULL, 10, 'A');
+INSERT INTO EMP (EMPNO, ENAME, JOB, MGR, HIREDATE, SAL, COMM, DEPTNO, CLASS) 
+VALUES (4, 'Alice Brown', 'Manager', NULL, TO_DATE('2022-12-05', 'YYYY-MM-DD'), 5500, 800, 30, 'C');
+
+CREATE PROCEDURE getEmpTotalSalByEmpNo (EMP_NO IN NUMBER) AS
+   TOTAL_SALARY NUMBER(7,2);
+   BEGIN
+      SELECT sal+NVL(comm, 0) INTO TOTAL_SALARY FROM EMP WHERE EMPNO = EMP_NO;
+   dbms_output.put_line(TOTAL_SALARY);
+   END getEmpTotalSalByEmpNo;
+   
+SELECT  
+    object_name 
+FROM  
+    user_procedures 
+WHERE 
+    object_type = 'PROCEDURE';
+    
+SET SERVEROUTPUT ON
+EXECUTE getEmpTotalSalByEmpNo(2)
+
+SELECT * from EMP;
