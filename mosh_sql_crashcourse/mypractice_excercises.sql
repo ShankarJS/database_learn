@@ -71,6 +71,57 @@ select * from orders JOIN customers ON orders.customer_id = customers.customer_i
 select order_id, o.customer_id, first_name, last_name from orders o JOIN customers c ON o.customer_id = c.customer_id;
 select order_id, oi.product_id, name, quantity, oi.unit_price from order_items oi JOIN products p ON oi.product_id = p.product_id;
 
+-- SELF JOINS:
+use sql_hr;
+select * from employees e JOIN employees m ON e.reports_to = m.employee_id;
+select e.employee_id, e.first_name, m.first_name as Manager from employees e JOIN employees m ON e.reports_to = m.employee_id;
+
+-- Joining multiple tables:
+use sql_store;
+select o.order_id, o.order_date, c.first_name, c.last_name, os.name AS status from orders o join customers c on o.customer_id = c.customer_id join order_statuses os on o.status = os.order_status_id;
+-- Join payment with client and payment_method
+use sql_invoicing;
+select p.date, p.invoice_id, p.amount, c.name, pm.name from payments p join clients c on p.client_id = c.client_id join payment_methods pm on p.payment_method = pm.payment_method_id;
+
+-- Compound join conditions:
+select * from order_items oi JOIN order_item_notes oin 
+	ON oi.order_Id = oin.order_Id
+    AND oi.product_id = oin.product_id;
+    
+-- Implicit JOIN syntax:
+select * from orders o, customers c where o.customer_id = c.customer_id;
+-- In above query remember to use where clause else it will be a cross join, also it is similar to:
+select * from orders o join customers c on o.customer_id = c.customer_id;
+
+-- OUTER JOIN:
+select c.customer_id, c.first_name, o.order_id from customers c LEFT JOIN orders o on c.customer_id = o.customer_id order by c.customer_id;
+select c.customer_id, c.first_name, o.order_id from orders o RIGHT JOIN customers c on c.customer_id = o.customer_id order by c.customer_id;
+select p.product_id, p.name, oi.quantity from products p left join order_items oi on p.product_id = oi.product_id;
+
+-- Outer Joins between multiple tables:
+select c.customer_id, c.first_name, o.order_id, sh.name as Shipper from customers c left join orders o on c.customer_id = o.customer_id left join shippers sh on o.shipper_id = sh.shipper_id order by c.customer_id;
+select o.order_id, o.order_date, c.first_name as customer, sh.name as shipper, os.name as status from orders o join customers c on o.customer_id = c.customer_id left join shippers sh on o.shipper_id = sh.shipper_id join order_statuses os ON o.status = os.order_status_id;
+
+-- Self outer join
+use sql_hr;
+select e.employee_id, e.first_name, m.first_name as manager from employees e left join employees m on e.reports_to = m.employee_id;
+
+-- The USING Clause
+use sql_store;
+select o.order_id, c.first_name from orders o join customers c on o.customer_id = c.customer_id; 
+-- above query can be replaced with:
+select o.order_id, c.first_name, sh.name AS Shipper from orders o join customers c using (customer_id); 
+select o.order_id, c.first_name, sh.name AS Shipper from orders o join customers c using (customer_id) left join shippers sh using (shipper_id);
+-- using keyword for composite keys:
+select * from order_items oi JOIN order_item_notes oin USING (order_id, product_id); 
+use sql_invoicing;
+select p.date, c.name as client, p.amount, pm.name as payment_method from payments p join clients c using (client_id) join payment_methods pm on p.payment_method = pm.payment_method_id;
+
+-- Done till Using Clause 2:13:37 next is natural joins
+
+
+
+
 
 
 
