@@ -119,7 +119,35 @@ select p.date, c.name as client, p.amount, pm.name as payment_method from paymen
 
 -- Done till Using Clause 2:13:37 next is natural joins
 
+-- Natural Joins:
+select o.order_id, c.first_name from orders o natural join customers c;
 
+-- Cross Joins:
+select c.first_name as customers, p.name as product from customers c cross Join products p order by c.first_name;
+-- Above is explicit syntax, Alternate syntax for cross join:
+select c.first_name as customers, p.name as product from customers c, products p order by c.first_name;
+
+-- Unions
+select order_id, order_date, 'Active' AS status from orders where order_date >= '2019-01-01'
+UNION
+select order_id, order_date, 'Archived' AS status from orders where order_date < '2019-01-01';
+select first_name from customers UNION select name from shippers;
+SELECT customer_id, first_name, points, 'Bronze' as type from customers where points<2000 union 
+SELECT customer_id, first_name, points, 'Silver' as type from customers where points BETWEEN 2000 and 3000 union
+SELECT customer_id, first_name, points, 'Gold' as type from customers where points > 3000 order by first_name;
+
+-- INSERTING A SINGLE ROW:
+INSERT INTO CUSTOMERS VALUES(DEFAULT, 'John', 'Smith', '1990-01-01', NULL, 'address', 'city', 'CA', DEFAULT);  
+-- Alternate way:
+INSERT INTO CUSTOMERS(first_name, last_name, birth_date, address, city, state) VALUES('John', 'Smith', '1990-01-01', 'address', 'city', 'CA');
+
+-- INSERTING MULTIPLE ROWS:
+INSERT INTO SHIPPERS (name) values ('shipper1'), ('shipper2'), ('shipper3');
+INSERT INTO PRODUCTS (name, quantity_in_stock, unit_price) values ('Product1', 10, 1.95), ('Product2', 11, 1.95), ('Product3', 12, 1.95);
+
+-- INSERTING HIERARCHICAL ROWS:
+INSERT INTO orders (customer_id, order_date, status) values(1, '2019-01-02', 1);
+INSERT INTO order_items values (LAST_INSERT_ID(), 1, 1, 2.95), (last_insert_id(), 2, 1, 3.95);
 
 
 
